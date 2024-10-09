@@ -3,40 +3,58 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
-const cookieParser = require("cookie-parser");
 const { StatusCodes } = require("http-status-codes");
+const path = require("path");
+const indexRouter = require("./routers/indexRouter");
+const expressSession = require("express-session");
+const errController = require("./controllers/errorController");
 
 const app = express();
-const PORT = process.env.PORT;
+const { PORT, API_PREFIX, COOKIE_SECRET } = process.env;
 const corsWhiteList = [`http://localhost:${PORT}`];
 
-// request headers
+// CORS
 app.set("trust proxy", true);
 app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (corsWhiteList.indexOf(origin) !== -1 || !origin) return callback(null, true);
+      if (corsWhiteList.indexOf(origin) !== -1 || !origin)
+        return callback(null, true);
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials : true
+    credentials: true,
   })
 );
 
-// request body
-app.use(cookieParser());
+// cookie
+app.use(
+  expressSession({
+    secret: COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 10, // 10 min
+      priority: "medium",
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      // signed: false
+    },
+  })
+);
+
+// parse body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// run server
-app.get("/", (req, res, next) => {
-  res.status(StatusCodes.OK).json({
-    message: "Hello, world!",
-  });
-});
+// static files
+app.use(express.static(path.join(__dirname, "public")));
+
+// routing
+app.use(`${API_PREFIX}`, indexRouter);
+app.use(errController);
 
 app.listen(PORT, () => {
   console.log(`Listening to port ${PORT}`);
-})
-
-
+});
