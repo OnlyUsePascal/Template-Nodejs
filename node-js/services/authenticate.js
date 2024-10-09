@@ -1,12 +1,13 @@
-const authenticate = async (user, pwd) => {
-  const { TEST_USER, TEST_PWD } = process.env;
+const authenticate = {
+  basic: async (user, pwd) => {
+    const { TEST_USER, TEST_PWD } = process.env;
+    // missing database + bcrypt
+    if (user == TEST_USER && pwd == TEST_PWD) {
+      return true;
+    }
 
-  // missing database + bcrypt
-  if (user === TEST_USER && pwd === TEST_PWD) {
-    return true;
-  }
-
-  return false;
+    return false;
+  },
 };
 
 module.exports = authenticate;
