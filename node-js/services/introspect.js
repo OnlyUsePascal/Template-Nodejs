@@ -1,5 +1,3 @@
-const session = require("express-session");
-
 const introspect = {
   basic : (token) => {
     if (!token) return null;
