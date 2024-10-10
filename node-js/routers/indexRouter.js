@@ -1,7 +1,6 @@
 const express = require("express");
 const { StatusCodes } = require("http-status-codes");
 const authRouter = require("./authRouter");
-
 const indexRouter = express.Router();
 
 indexRouter.get("/testing", (req, res, next) => {
@@ -9,6 +8,7 @@ indexRouter.get("/testing", (req, res, next) => {
     message: "Hello, world!",
   });
 });
+
 
 indexRouter.use('/auth', authRouter);
 
