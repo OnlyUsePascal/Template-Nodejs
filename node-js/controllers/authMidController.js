@@ -1,5 +1,5 @@
 const authenticate = require("../services/authenticate");
-const createToken = require("../services/createToken");
+const tokenCreate = require("../services/tokenCreate");
 /** @typedef {import("../controllers/index").reqHandler} reqHandler */
 
 const authMidController = {
@@ -7,17 +7,21 @@ const authMidController = {
   login: async (req, res, next) => {
     const { user, pwd } = req.body;
 
-    // validate
-    if (!(await authenticate.mid(user, pwd)))
-      return next(new Error("Invalid credentials"));
+    try {
+      // validate
+      if (!(await authenticate.mid(user, pwd)))
+        throw new Error("Invalid credentials");
 
-    // session token
-    const token = createToken.basic(user);
-    req.session.token = token;
+      // session token
+      const token = await tokenCreate.mid(user);
+      req.session.token = token;
 
-    return res.json({
-      message: "Logged in!",
-    });
+      return res.json({
+        message: "Logged in!",
+      });
+    } catch (err) {
+      return next(err);
+    }
   },
 
   /** @type {reqHandler} */

@@ -1,4 +1,4 @@
-const introspect = require("../services/introspect");
+const tokenIntrospect = require("../services/tokenIntrospect");
 /** @typedef {import("../controllers/index").reqHandler} reqHandler */
 
 const cookieHandler = {
@@ -6,7 +6,7 @@ const cookieHandler = {
   basic: async (req, res, next) => {
     // introspect
     const { token } = req.session;
-    const sessionInfo = introspect.basic(token);
+    const sessionInfo = tokenIntrospect.basic(token);
 
     if (!sessionInfo) return next(new Error("Invalid cookie"));
 
@@ -19,7 +19,7 @@ const cookieHandler = {
   mid: async (req, res, next) => {
     // introspect
     const { token } = req.session;
-    const sessionInfo = introspect.basic(token);
+    const sessionInfo = tokenIntrospect.mid(token);
 
     if (!sessionInfo) return next(new Error("Invalid cookie"));
 

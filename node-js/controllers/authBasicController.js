@@ -1,5 +1,5 @@
 const authenticate = require("../services/authenticate");
-const createToken = require("../services/createToken");
+const tokenCreate = require("../services/tokenCreate");
 
 const authBasicController = {
   login: async (req, res, next) => {
@@ -10,7 +10,7 @@ const authBasicController = {
       return next(new Error("Invalid credentials"));
 
     // session token
-    const token = createToken.basic(user);
+    const token = tokenCreate.basic(user);
     req.session.token = token;
 
     return res.json({

@@ -12,10 +12,10 @@ const authenticate = {
   },
 
   mid: async (user, pwd) => {
-    const { TEST_USER, TEST_PWD_HASH, SALT_ROUNDS } = process.env;
+    const { TEST_USER, TEST_PWD_HASH } = process.env;
     // database
 
-    // bcrypt 
+    // bcrypt
     if (user == TEST_USER && bcrypt.compareSync(pwd, TEST_PWD_HASH)) {
       return true;
     }
