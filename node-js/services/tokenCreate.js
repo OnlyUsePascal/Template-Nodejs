@@ -23,7 +23,7 @@ const tokenCreate = {
         },
         (err, token) => {
           if (err) return rej(err);
-          console.log(`jwt: ${token}`);
+          // console.log(`jwt: ${token}`);
           return res(token)
         }
       );

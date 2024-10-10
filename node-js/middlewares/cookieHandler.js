@@ -19,13 +19,16 @@ const cookieHandler = {
   mid: async (req, res, next) => {
     // introspect
     const { token } = req.session;
-    const sessionInfo = tokenIntrospect.mid(token);
 
-    if (!sessionInfo) return next(new Error("Invalid cookie"));
-
-    // chaining
-    req.session.info = sessionInfo;
-    return next();
+    try {
+      const sessionInfo = await tokenIntrospect.mid(token);
+      if (!sessionInfo) throw new Error('Invalid Cookie');
+      // chaining
+      req.session.info = sessionInfo;
+      return next();
+    } catch (err) {
+      return next(err);
+    }
   },
 };
 
