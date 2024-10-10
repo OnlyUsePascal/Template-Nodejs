@@ -8,6 +8,7 @@ const path = require("path");
 const indexRouter = require("./routers/indexRouter");
 const expressSession = require("express-session");
 const errController = require("./controllers/errorController");
+const mysqlDb = require("./repositories/mysqlDb");
 
 const app = express();
 const { PORT, API_PREFIX, COOKIE_SECRET } = process.env;
@@ -43,6 +44,9 @@ app.use(
     },
   })
 );
+
+// database
+mysqlDb.init();
 
 // parse body
 app.use(bodyParser.json());
