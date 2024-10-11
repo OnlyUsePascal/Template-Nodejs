@@ -6,28 +6,28 @@ const tokenCreate = {
     return `${user},${crypto.randomUUID()}`;
   },
 
-  mid: async (user) => {
+  mid: async (username) => {
     const { JWT_SECRET } = process.env;
     const payload = {
-      user,
+      username,
       sessionId: crypto.randomUUID(),
     };
-    
+
     return new Promise((res, rej) => {
       jwt.sign(
         payload,
         JWT_SECRET,
         {
-          algorithm: 'HS256', //hashing SHA-256
+          algorithm: "HS256", //hashing SHA-256
           expiresIn: "10m", // TODO: CONFLICT WITH SESSION TOKEN
         },
         (err, token) => {
           if (err) return rej(err);
           // console.log(`jwt: ${token}`);
-          return res(token)
+          return res(token);
         }
       );
-    })   
+    });
   },
 };
 

@@ -5,15 +5,15 @@ const tokenCreate = require("../services/tokenCreate");
 const authMidController = {
   /** @type {reqHandler} */
   login: async (req, res, next) => {
-    const { user, pwd } = req.body;
+    const { username, pwd } = req.body;
 
     try {
       // validate
-      if (!(await authenticate.mid(user, pwd)))
+      if (!(await authenticate.mid(username, pwd)))
         throw new Error("Invalid credentials");
 
       // session token
-      const token = await tokenCreate.mid(user);
+      const token = await tokenCreate.mid(username);
       req.session.token = token;
 
       return res.json({

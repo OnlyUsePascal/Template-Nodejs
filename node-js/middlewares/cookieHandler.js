@@ -1,3 +1,4 @@
+const userRepo = require("../repositories/userRepo");
 const tokenIntrospect = require("../services/tokenIntrospect");
 /** @typedef {import("../controllers/index").reqHandler} reqHandler */
 
@@ -17,12 +18,16 @@ const cookieHandler = {
 
   /** @type {reqHandler} */
   mid: async (req, res, next) => {
-    // introspect
+    // introspect round 1, session itself
     const { token } = req.session;
 
     try {
+      // introspect round 2: jwt
       const sessionInfo = await tokenIntrospect.mid(token);
-      if (!sessionInfo) throw new Error('Invalid Cookie');
+
+      // round 3, this user exist?
+      const user = await userRepo.findOneByUserName(sessionInfo.username);
+
       // chaining
       req.session.info = sessionInfo;
       return next();

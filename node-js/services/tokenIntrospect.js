@@ -11,7 +11,7 @@ const introspect = {
   },
 
   mid: (token) => {
-    if (!token) return null;
+    if (!token) throw new Error('Empty session token');
     const { JWT_SECRET } = process.env;
 
     return new Promise((res, rej) => {
