@@ -6,6 +6,8 @@ const {
   DB_NAME,
   DB_HOST,
   DB_CONNECTION_LIMIT,
+
+  DB_USER_ROOT_ROLE,
 } = process.env;
 
 const poolRoot = mysql.createPool({
@@ -22,8 +24,11 @@ const poolRoot = mysql.createPool({
   keepAliveInitialDelay: 0,
 });
 
+const dbMap = new Map();
+dbMap.set(DB_USER_ROOT_ROLE, poolRoot);
+
 const mysqlDb = {
-  init: async () => {
+  init: () => {
     poolRoot
       .query(`select 1`)
       .then(([rows, fields]) => {
@@ -35,7 +40,16 @@ const mysqlDb = {
       });
   },
 
-  getPool: async () => {},
+  // get pool from role
+  /** 
+   * @param {string} role 
+   * @returns {mysql.Pool}
+  */
+  getPool: (role) => {
+    if (!dbMap.has(role))
+      throw new Error(`Non-existing Role: ${role}`);
+    return dbMap.get(role);
+  },
 };
 
 module.exports = mysqlDb;

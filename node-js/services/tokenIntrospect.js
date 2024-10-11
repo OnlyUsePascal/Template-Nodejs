@@ -17,7 +17,6 @@ const introspect = {
     return new Promise((res, rej) => {
       jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if (err) return rej(err);
-        // console.log(`jwt decoded: ${JSON.stringify(decoded)}`);
         return res(decoded);
       });
     });

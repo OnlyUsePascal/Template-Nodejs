@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const userRepo = require("../repositories/userRepo");
 
 const authenticate = {
   basic: async (user, pwd) => {
@@ -11,16 +12,13 @@ const authenticate = {
     return false;
   },
 
-  mid: async (user, pwd) => {
+  mid: async (username, pwd) => {
     const { TEST_USER, TEST_PWD_HASH } = process.env;
     // database
+    const user = await userRepo.findOneByUserName(username);
 
     // bcrypt
-    if (user == TEST_USER && bcrypt.compareSync(pwd, TEST_PWD_HASH)) {
-      return true;
-    }
-
-    return false;
+    return bcrypt.compareSync(pwd, user.password);
   },
 };
 
